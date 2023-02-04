@@ -20,7 +20,9 @@ def connectMyCopter():
 		#import dronekit_sitl
 		#sitl = dronekit_sitl.start_default()
 		#connection_string = sitl.connection_string()
-	baud_rate=57600
+
+	baud_rate=921600
+
 	vehicle = connect(connection_string, baud=baud_rate, wait_ready=True)
 	return vehicle
 
