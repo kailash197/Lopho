@@ -1,0 +1,10 @@
+[Unit]
+Description=Startup Script
+
+[Service]
+ExecStart=/home/pi/Lopho/startup/startup.sh
+User=pi
+WorkingDirectory=/home/pi/Lopho/startup
+
+[Install]
+WantedBy=multi-user.target
