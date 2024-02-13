@@ -1,4 +1,4 @@
-#Dependencies
+# Dependencies
 from dronekit import connect, VehicleMode, LocationGlobalRelative, APIException
 import time
 import socket
@@ -7,7 +7,7 @@ import math
 import argparse
 
 
-### functions
+# functions
 
 def connectMyCopter():
 	parser = argparse.ArgumentParser(description='commands')
@@ -19,13 +19,10 @@ def connectMyCopter():
 		import dronekit_sitl
 		sitl = dronekit_sitl.start_default()
 		connection_string = sitl.connection_string()
-	
 	vehicle = connect(connection_string, wait_ready=True)
 	return vehicle
 
-### Main executable
 
+# Main executable
 vehicle = connectMyCopter()
 vehicle.close()
-
-
