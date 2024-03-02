@@ -111,11 +111,12 @@ RUN wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage \
     && chmod +x QGroundControl.AppImage \
     && sudo cp ./QGroundControl.AppImage /usr/local/bin/QGC
 
-WORKDIR /lopho_project/ros2_ws
+WORKDIR /home/${USERNAME}/Lopho/ros2_ws
 RUN colcon build --symlink-install
-RUN echo "source /lopho_project/ros2_ws/install/setup.bash" >> ~/.bashrc
+RUN echo "source /home/${USERNAME}/Lopho/ros2_ws/install/setup.bash" >> ~/.bashrc
 
 # Install MAVROS
+WORKDIR /home/${USERNAME}/Lopho/temp
 RUN sudo apt-get update \
     && sudo apt-get install ros-humble-mavros ros-humble-mavros-extras gnome-terminal -y \
     && wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh \
@@ -129,5 +130,5 @@ COPY entrypoint.sh /entrypoint.sh
 # Set up entrypoint and default command
 ENTRYPOINT ["/entrypoint.sh"]
 
-WORKDIR /lopho_project
+WORKDIR /home/${USERNAME}/Lopho
 CMD ["bash"]
