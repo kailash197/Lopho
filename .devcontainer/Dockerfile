@@ -112,8 +112,12 @@ RUN wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage \
     && sudo cp ./QGroundControl.AppImage /usr/local/bin/QGC
 
 WORKDIR /home/${USERNAME}/Lopho/ros2_ws
+# TODO: Add git clone for different packages and node here
 RUN colcon build --symlink-install
 RUN echo "source /home/${USERNAME}/Lopho/ros2_ws/install/setup.bash" >> ~/.bashrc
+RUN echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
+RUN echo "source /usr/share/colcon_cd/function/colcon_cd.sh" >> ~/.bashrc
+RUN echo "export _colcon_cd_root=/opt/ros/humble/" >> ~/.bashrc
 
 # Install MAVROS
 WORKDIR /home/${USERNAME}/Lopho/temp
