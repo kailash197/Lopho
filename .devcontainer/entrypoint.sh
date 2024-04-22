@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status
-mkdir -p /home/$(whoami)/Lopho/ros2_ws/src
+# mkdir -p /home/$(whoami)/Lopho/ros2_ws/src
 
 # source underlay
 source /opt/ros/${ROS_DISTRO}/setup.bash
@@ -11,9 +11,13 @@ source /opt/ros/${ROS_DISTRO}/setup.bash
 # check for dependencies
 # rosdep install -i --from-path src --rosdistro ${ROS_DISTRO} -y 
 
-cd /home/$(whoami)/Lopho/ros2_ws/src
+cd /home/$(whoami)
 # to this folder clone package source files
-git clone -b develop --recursive git@github.com:kailash197/Lopho.git ros2_ws/src/lopho_pkg
+git clone -b develop --filter=blob:none --no-checkout git@github.com:kailash197/Lopho.git
+cd Lopho 
+git sparse-checkout set -cone
+git checkout develop
+git sparse-checkout set ros2_ws/src/lopho_pkg
 
 
 # go back to root folder & build package

@@ -112,7 +112,7 @@ RUN wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage \
     && sudo cp ./QGroundControl.AppImage /usr/local/bin/QGC
 
 # Install MAVROS
-WORKDIR /home/${USERNAME}/Lopho/temp
+WORKDIR /home/${USERNAME}/temp
 RUN sudo apt-get update \
     && sudo apt-get install ros-humble-mavros ros-humble-mavros-extras gnome-terminal -y \
     && wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh \
@@ -127,5 +127,5 @@ COPY entrypoint.sh /entrypoint.sh
 # Create ROS workspace, packages and nodes in entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-WORKDIR /home/${USERNAME}/Lopho
+WORKDIR /home/${USERNAME}
 CMD ["bash"]
