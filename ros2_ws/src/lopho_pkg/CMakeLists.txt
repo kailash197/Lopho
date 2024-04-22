@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(my_package)
+project(lopho_pkg)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -7,37 +7,18 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(mavros_msgs REQUIRED)
-
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
+add_executable(sitl_controller src/sitl_controller.cpp)
+target_include_directories(sitl_controller PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(sitl_controller PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
-
-# Define the executable target
-add_executable(hello_node src/my_node.cpp)
-add_executable(apm_controller src/apm_controller.cpp)
-
-# Specify dependencies for the target (if any)
-ament_target_dependencies(hello_node rclcpp std_msgs)
-ament_target_dependencies(apm_controller rclcpp std_msgs mavros_msgs)
-
-# Install the executable target
-install(TARGETS
-  hello_node
-  apm_controller
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install (DIRECTORY
-  launch
-  DESTINATION share/${PROJECT_NAME}
-)
-
-
+install(TARGETS sitl_controller
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
