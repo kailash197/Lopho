@@ -13,7 +13,7 @@ docker build -t humble_machine:$date_tag /home/$(whoami)/Lopho/.devcontainer/
 
 # Display a message indicating the start of Docker run
 echo "Docker Run"
-docker run -itd --privileged --name humble_container --user vscode --network host --ipc host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $PWD:/Lopho humble_machine:20240301
+docker run -itd --privileged --name humble_container --user vscode --network host --ipc host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $PWD:/Lopho humble_machine:$date_tag
 
 # Start SITL in a new terminal
 gnome-terminal -- bash -c \
