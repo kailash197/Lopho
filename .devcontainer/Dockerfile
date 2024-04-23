@@ -1,5 +1,8 @@
 FROM osrf/ros:humble-desktop-full
 
+ARG timezone
+ENV TZ=${timezone}
+
 # Add vscode user with same UID and GID as your host system
 # (copied from https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user#_creating-a-nonroot-user)
 ARG USERNAME=vscode
@@ -114,18 +117,24 @@ RUN wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage \
 # Install MAVROS
 WORKDIR /home/${USERNAME}/temp
 RUN sudo apt-get update \
-    && sudo apt-get install ros-humble-mavros ros-humble-mavros-extras gnome-terminal -y \
+    && sudo apt-get install ros-humble-mavros ros-humble-mavros-extras gnome-terminal tree -y \
     && wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh \
     && sudo chmod +x install_geographiclib_datasets.sh \
     && sudo ./install_geographiclib_datasets.sh \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # Set up entrypoint (optional)
-COPY entrypoint.sh /entrypoint.sh
+WORKDIR /home/${USERNAME}/Lopho
+COPY . /home/${USERNAME}/Lopho/
 
-# Set up entrypoint and default command
-# Create ROS workspace, packages and nodes in entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+# Build ROS workspace, packages and nodes via entrypoint.sh
+COPY ./.devcontainer/entrypoint.sh /entrypoint.sh
+RUN sudo chmod +x /entrypoint.sh
+RUN /entrypoint.sh
+RUN echo "source /home/${USERNAME}/Lopho/install/setup.bash" >> ~/.bashrc \
+    && echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc \
+    && echo "source /usr/share/colcon_cd/function/colcon_cd.sh" >> ~/.bashrc \
+    && echo "export _colcon_cd_root=/opt/ros/humble/" >> ~/.bashrc
 
-WORKDIR /home/${USERNAME}
+WORKDIR /home/${USERNAME}/Lopho
 CMD ["bash"]

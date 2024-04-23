@@ -15,7 +15,7 @@ find_package(mavros_msgs REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 add_executable(sitl_controller src/sitl_controller.cpp)
-add_executable(lopho_pkg src/flight_mode_node.cpp)
+# add_executable(lopho_pkg src/flight_mode_node.cpp)
 
 target_include_directories(sitl_controller PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
