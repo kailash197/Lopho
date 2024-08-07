@@ -49,3 +49,54 @@ gnome-terminal -- bash -c \
 
 gnome-terminal -- bash -c \
   "docker exec -it humble_container bash" 
+
+
+
+
+# Commands to run 
+# cd <folder containing dockerfile> 
+# docker build -t humble_machine .
+# docker run -it --user ros --network=host --ipc=host -v $PWD:/current_folder humble_machine
+# 
+# LOCALE and TIMEZONE might be useful while creating own image starting bare ubuntu image.
+
+# for display
+# docker run -it --user ros --network=host --ipc=host -v $PWD:/current_folder -v /tmp/.X11-unix:/tmp/.X11-uniz:rw --env=DISPLAY humble_machine
+
+# for device: I 
+# cons: device should be plugged at start of container; can't replugges as devicename may change
+# docker run -it --user ros --network=host --ipc=host -v $PWD:/current_folder -v /tmp/.X11-unix:/tmp/.X11-uniz:rw --env=DISPLAY --device=/dev/input/<devicename> humble_machine
+
+# for device: II, using -v
+# cons: mapping single device doesn't work; map folder only
+# docker run -it --user ros --network=host --ipc=host -v $PWD:/current_folder -v /tmp/.X11-unix:/tmp/.X11-uniz:rw --env=DISPLAY -v /dev/input:/dev/input --device-cgroup-rule='c <major>:<minor> rmw' humble_machine
+# major: device driver id major; can use * for all
+# minor: device driver id minor; can use * for all
+# rmw: read, make node, write
+# --device-cgroup-rule='c 13:* rmw'
+
+# Add devices: III
+# docker run -it --user ros --network=host --ipc=host -v $PWD:/current_folder -v /tmp/.X11-unix:/tmp/.X11-uniz:rw --env=DISPLAY -v /dev:/dev --device-cgroup-rule='c *:* rmw' humble_machine
+
+# Add Intel Realsense D435
+# cybermonk@spectre:~$ lsusb | grep realsense
+# cybermonk@spectre:~$ lsusb | grep -i realsense
+# Bus 003 Device 004: ID 8086:0b07 Intel Corp. RealSense D435
+# cybermonk@spectre:~$ ls -l /dev/bus/usb/003
+# total 0
+# crw-rw-r-- 1 root root 189, 256 Feb 11 11:30 001
+# crw-rw-r-- 1 root root 189, 257 Feb 11 11:30 002
+# crw-rw-r-- 1 root root 189, 258 Feb 11 11:30 003
+# crw-rw-r-- 1 root root 189, 259 Feb 11 17:57 004
+# cybermonk@spectre:~$ 
+# docker run -it --user ros --network=host --ipc=host -v $PWD:/current_folder -v /tmp/.X11-unix:/tmp/.X11-uniz:rw --env=DISPLAY -v /dev/bus/usb:/dev/bus/usb --device-cgroup-rule='c 189:* rmw' humble_machine
+
+
+# Add serial devices
+# generally listed under tty, dialout group
+# add user to dialout group to grant permission to access serial devices
+# RUN usermod -aG dialout ${USERNAME}
+# docker run -it --user ros --network=host --ipc=host -v $PWD:/current_folder -v /tmp/.X11-unix:/tmp/.X11-uniz:rw --env=DISPLAY -v /dev:/dev --privileged humble_machine
+#
+# Without using --privileged (don't use the BIG hammer if possible)
+# docker run -it --user ros --network=host --ipc=host -v $PWD:/current_folder -v /tmp/.X11-unix:/tmp/.X11-uniz:rw --env=DISPLAY --device=/dev/tty<...> humble_machine

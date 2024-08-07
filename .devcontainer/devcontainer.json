@@ -1,11 +1,12 @@
 {
   "name": "HUMBLE DESKTOP DOCKER CONTAINER",
-  "dockerFile": "Dockerfile",
+  "dockerFile": "Dockerfile", // Specify the path to your Dockerfile here
+  "context": "/home/cybermonk/Lopho",
   "runArgs": [
     "--privileged",
     "--network=host"
   ],
-  "postStartCommand": "/entrypoint.sh",
+  // "postStartCommand": "/entrypoint.sh",
 
   "workspaceMount": "source=${localWorkspaceFolder},target=/${localWorkspaceFolderBasename},type=bind",
   "workspaceFolder": "/${localWorkspaceFolderBasename}",
@@ -13,3 +14,4 @@
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.bash_history,target=/home/vscode/.bash_history,type=bind"
   ]
 }
+

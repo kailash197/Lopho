@@ -39,7 +39,7 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 
 # # Install Gazebo ROS package
 RUN sudo apt-get update \
-    && sudo apt-get install -y lsb-release wget gnupg \
+    && sudo apt-get install -y lsb-release wget gnupg libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     && sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" \ 
     | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
@@ -125,7 +125,7 @@ RUN sudo apt-get update \
 
 # Set up entrypoint (optional)
 WORKDIR /home/${USERNAME}/Lopho
-COPY . /home/${USERNAME}/Lopho/
+COPY --chown=${USERNAME}:${USERNAME} . /home/${USERNAME}/Lopho/
 
 # Build ROS workspace, packages and nodes via entrypoint.sh
 COPY ./.devcontainer/entrypoint.sh /entrypoint.sh
