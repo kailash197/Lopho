@@ -10,20 +10,30 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(mavros_msgs REQUIRED)
 
+# Add include directories
+include_directories(include)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-add_executable(sitl_controller src/sitl_controller.cpp)
-# add_executable(lopho_pkg src/flight_mode_node.cpp)
+add_executable(flight_mode_node src/flight_mode_node.cpp)
 
-target_include_directories(sitl_controller PUBLIC
+# Link the executable with the necessary libraries
+ament_target_dependencies(flight_mode_node rclcpp mavros_msgs)
+
+target_include_directories(flight_mode_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_features(sitl_controller PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(flight_mode_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
-install(TARGETS sitl_controller
+install(TARGETS 
+  flight_mode_node
   DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

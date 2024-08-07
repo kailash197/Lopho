@@ -9,4 +9,7 @@ Entry Point:
     b. Starts SITL simulation
     c. Starts MAVROS
     d. Start QGC
-  
+
+
+Note:
+* All ROS2 setup files are sourced towards the end of execution of the DockerFile.
