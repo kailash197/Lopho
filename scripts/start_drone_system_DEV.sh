@@ -2,6 +2,7 @@
 
 # Change directory to the project directory
 cd /home/$(whoami)/Lopho
+container_user=vscode
 
 # Get today's date in YYYYMMDD format
 date_tag=$(date +'%Y%m%d')
@@ -16,28 +17,28 @@ docker build \
   
 # Display a message indicating the start of Docker run
 echo "Docker Run"
+
+# -v /tmp/.X11-unix:/tmp/.X11-unix: Shares X11 socket for GUI applications.
 docker run -itd --privileged \
   --name humble_container \
-  --user vscode \
+  --user $container_user \
   --network host \
   --ipc host \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
-  -v $PWD:/Lopho \
   -e DISPLAY=$DISPLAY humble_machine:$date_tag
+  # -v $PWD:/Lopho \ 
 
 # Start SITL in a new terminal
 gnome-terminal -- bash -c \
   "docker exec -it humble_container bash -c ' \
     echo \"Terminal SITL for \$(whoami)\"; \
     echo \"Starting SITL\"; \
-    cd simulation; \
     arducopter -S -I0 --home 43.502922,-80.467015,0,353 --model '+' --speedup 1 --defaults /home/\$(whoami)/ardupilot/Tools/autotest/default_params/copter.parm; \
     bash';"
 
 gnome-terminal -- bash -c \
   "docker exec -it humble_container bash -c ' \
     echo \"Terminal MAVROS for \$(whoami)\"; \
-    source install/setup.bash ; \
     source /opt/ros/${ROS_DISTRO}/setup.bash; \
     ros2 launch mavros apm.launch fcu_url:=tcp://localhost gcs_url:=udp://@localhost:14550; \
     bash';"
@@ -45,10 +46,10 @@ gnome-terminal -- bash -c \
 gnome-terminal -- bash -c \
   "docker exec -it humble_container bash -c ' \
     echo \"Terminal QGC for \$(whoami)\"; \
-    QGC';" 
+    QGC';"
 
-gnome-terminal -- bash -c \
-  "docker exec -it humble_container bash" 
+# Start a new terminal
+gnome-terminal -- bash -c "docker exec -it humble_container bash" 
 
 
 

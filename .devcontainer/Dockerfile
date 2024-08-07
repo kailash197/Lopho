@@ -124,17 +124,15 @@ RUN sudo apt-get update \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # Set up entrypoint (optional)
-WORKDIR /home/${USERNAME}/Lopho
-COPY --chown=${USERNAME}:${USERNAME} . /home/${USERNAME}/Lopho/
+WORKDIR /home/${USERNAME}
 
-# Build ROS workspace, packages and nodes via entrypoint.sh
+# # Build ROS workspace, packages and nodes via entrypoint.sh
 COPY ./.devcontainer/entrypoint.sh /entrypoint.sh
 RUN sudo chmod +x /entrypoint.sh
 RUN /entrypoint.sh
-RUN echo "source /home/${USERNAME}/Lopho/install/setup.bash" >> ~/.bashrc \
+RUN echo "source /home/${USERNAME}/Lopho/ros2_ws/install/setup.bash" >> ~/.bashrc \
     && echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc \
     && echo "source /usr/share/colcon_cd/function/colcon_cd.sh" >> ~/.bashrc \
     && echo "export _colcon_cd_root=/opt/ros/humble/" >> ~/.bashrc
 
-WORKDIR /home/${USERNAME}/Lopho
 CMD ["bash"]

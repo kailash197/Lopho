@@ -1,15 +1,17 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status
-cd /home/$(whoami)/Lopho
+cd /home/$(whoami)
+
+git clone https://github.com/kailash197/Lopho.git -b master
+cd Lopho/ros2_ws
+
 # source underlay
-
 source /opt/ros/${ROS_DISTRO}/setup.bash
-rosdep install -i --from-path ./ros2_ws/src --rosdistro ${ROS_DISTRO} -y 
+rosdep install -i --from-path ./src --rosdistro ${ROS_DISTRO} -y 
+# This option tells rosdep to install dependencies for packages located in the Lopho/ros2_ws/src directory.
 
-
-# https://medium.com/@gabrielcruz_68416/clone-a-specific-folder-from-a-github-repository-f8949e7a02b4
-cd /home/$(whoami)/Lopho
 colcon build
+source install/setup.bash
 colcon test
 
 exec "$@"
