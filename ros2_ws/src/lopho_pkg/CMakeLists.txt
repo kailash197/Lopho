@@ -13,9 +13,6 @@ find_package(mavros_msgs REQUIRED)
 # Add include directories
 include_directories(include)
 
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
 
 add_executable(flight_mode_node src/flight_mode_node.cpp)
 

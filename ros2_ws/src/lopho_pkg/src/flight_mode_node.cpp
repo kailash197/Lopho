@@ -13,6 +13,7 @@ public:
             "mavros/state", 10, [this](const mavros_msgs::msg::State::SharedPtr msg) {
                 // Callback function to print mavros state
                 RCLCPP_INFO(this->get_logger(), "Mavros state: %s", msg->mode.c_str());
+                RCLCPP_INFO(this->get_logger(), "Mavros arm state: %s", msg->armed ? "ARMED":"DISARMED");
             });
     }
 };
