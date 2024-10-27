@@ -1,28 +1,36 @@
 #!/bin/bash
 
-echo "This code doesn't work yet. The docker pull fails."
-exit 1
-
 # Define variables
 PROJECT_DIR="/home/$(whoami)/Lopho"
 CONTAINER_NAME="humble_container"
-IMAGE_NAME="kkhadk343/humble_lopho:MAVROS_Subscriber_Node"
 CONTAINER_USER="vscode"
 DATE_TAG=$(date +'%Y%m%d')
 DOCKERFILE_PATH="$PROJECT_DIR/.devcontainer/Dockerfile"
+DOCKER_USER="kkhadka343"
+DOCKER_KEY="Dockerp@ssword123"
+DOCKER_REPO="$DOCKER_USER/humble_lopho"
+DOCKER_REPO_TAG="MAVROS_Subscriber_Node"
+IMAGE_NAME="$DOCKER_REPO:$DOCKER_REPO_TAG"
 
-# Change directory to the project directory
 cd "$PROJECT_DIR" || { echo "Failed to change directory to $PROJECT_DIR"; exit 1; }
 
 # Clean up existing Docker containers
 docker container prune -f
-
 # Remove specific container if it exists
 docker rm -f $CONTAINER_NAME
 
-# Pull the Docker image from Docker Hub
-docker login
+# Check if image exists
+if docker image inspect "${IMAGE_NAME}" > /dev/null 2>&1; then
+  echo "Image ${IMAGE_NAME} already exists. Removing stale image..."
+  docker image rm "$IMAGE_NAME"
+else
+  # Pull the Docker image from Docker Hub
+  echo "Image ${IMAGE_NAME} not found."
+fi
+echo "Pulling from Docker Hub..."
+echo "$DOCKER_KEY" | docker login --username "$DOCKER_USER" --password-stdin
 docker pull "$IMAGE_NAME"
+docker images
 
 # Run the Docker container from the pulled image
 docker run -itd --privileged \
