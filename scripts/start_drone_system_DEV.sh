@@ -2,11 +2,12 @@
 
 # Define variables
 PROJECT_DIR="/home/$(whoami)/Lopho"
-CONTAINER_NAME="humble_container"
-IMAGE_NAME="humble_machine"
+CONTAINER_NAME="lopho_dev_container"
+IMAGE_NAME="lopho_dev_img"
 CONTAINER_USER="vscode"
 DATE_TAG=$(date +'%Y%m%d')
-DOCKERFILE_PATH="$PROJECT_DIR/.devcontainer/Dockerfile"
+DOCKERCOMPOSE_PATH="$PROJECT_DIR/.devcontainer/docker-compose.yml"
+SERVICE_NAME="lopho-dev"
 
 # Change directory to the project directory
 cd "$PROJECT_DIR" || { echo "Failed to change directory to $PROJECT_DIR"; exit 1; }
@@ -15,12 +16,18 @@ cd "$PROJECT_DIR" || { echo "Failed to change directory to $PROJECT_DIR"; exit 1
 docker container prune -f # Clean up existing Docker containers
 docker rm -f $CONTAINER_NAME # Remove specific container if exists
 
-# Build the Docker image with the tag including the date
-docker build \
-  --build-arg timezone=$(cat /etc/timezone) \
-  -f "$DOCKERFILE_PATH" \
-  -t "$IMAGE_NAME:$DATE_TAG" .
+# # Build the Docker image with the tag including the date
+# docker build \
+#   --build-arg timezone=$(cat /etc/timezone) \
+#   -f "$DOCKERFILE_PATH" \
+#   -t "$IMAGE_NAME:$DATE_TAG" .
 
+
+docker compose -f "$DOCKERCOMPOSE_PATH" build "$SERVICE_NAME"
+xhost +local:docker
+docker compose -f "$DOCKERCOMPOSE_PATH" run --remove-orphans "$SERVICE_NAME"
+
+exit 0
 # Display a message indicating the start of Docker run
 echo "Docker Run"
 

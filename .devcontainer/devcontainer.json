@@ -1,7 +1,7 @@
 {
   "name": "HUMBLE DESKTOP DOCKER CONTAINER",
   "dockerFile": "Dockerfile", // Specify the path to your Dockerfile here
-  "context": "/home/cybermonk/Lopho",
+  "context": "/home/${USER}/Lopho",
   "runArgs": [
     "--privileged",
     "--network=host"

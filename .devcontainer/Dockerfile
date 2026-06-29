@@ -13,7 +13,10 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && mkdir /home/${USERNAME}/.config \
     && chown ${USER_UID}:${USER_GID} /home/${USERNAME}/.config \
     && apt-get update \
-    && apt-get install -y sudo \
+    && apt-get install -y \
+        sudo \
+        tmux \
+        tree \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME \
     && rm -rf /var/lib/apt/lists/*
@@ -39,13 +42,17 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 
 # # Install Gazebo ROS package
 RUN sudo apt-get update \
-    && sudo apt-get install -y lsb-release wget gnupg libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+    && sudo apt-get install -y  \
+        lsb-release \
+        wget \
+        gnupg \
+        libgstreamer1.0-dev \
+        libgstreamer-plugins-base1.0-dev \
     && sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" \ 
     | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
     && sudo apt-get update \
     && sudo apt-get install -y gz-harmonic \
-    # sudo apt-get install -y ros-${ROS_DISTRO}-ros-gz 
     && sudo rm -rf /var/lib/apt/lists/*
 
 RUN sudo apt-get update \
@@ -110,7 +117,7 @@ RUN sudo usermod -a -G dialout $USERNAME \
     && sudo apt install libfuse2 -y \
     && sudo apt-get install fuse -y \
     && sudo rm -rf /var/lib/apt/lists/*
-RUN wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage \
+RUN wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.4.4/QGroundControl.AppImage \
     && chmod +x QGroundControl.AppImage \
     && sudo cp ./QGroundControl.AppImage /usr/local/bin/QGC
 
